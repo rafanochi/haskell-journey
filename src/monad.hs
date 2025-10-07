@@ -1,4 +1,5 @@
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
+import GHC.Internal.TH.Lib (safe)
 
 {-# HLINT ignore "Replace case with maybe" #-}
 {-# HLINT ignore "Replace case with fromMaybe" #-}
@@ -36,10 +37,10 @@ flatMap m f = case m of
 evalM :: Expr -> Maybe Int
 evalM (Val x) = Just x
 evalM (Div a b) = flatMap (evalM a) 
-  (\m -> flatMap (evalM b) (\n -> safediv m n))   
+  (\m -> flatMap (evalM b) (safediv m) )   
 
 
 main :: IO ()
 main = do
-  print (eval (Div (Val 2) (Val 2)))
-  print (evalM (Div (Val 2) (Val 2)))
+  print (eval (Div (Val 4) (Val 2)))
+  print (evalM (Div (Val 4) (Val 2)))
