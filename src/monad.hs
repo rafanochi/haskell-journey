@@ -1,5 +1,10 @@
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
+
 {-# HLINT ignore "Replace case with maybe" #-}
+{-# HLINT ignore "Replace case with fromMaybe" #-}
+{-# HLINT ignore "Use join" #-}
+{-# HLINT ignore "Use const" #-}
+{-# HLINT ignore "Avoid lambda" #-}
 safediv :: Int -> Int -> Maybe Int
 safediv _ 0 = Nothing
 safediv m n = Just $ m `div` n
@@ -19,11 +24,22 @@ m <<= f = case m of
   Nothing -> Nothing
   Just x -> f x
 
+{- evalM :: Expr -> Maybe Int
+evalM (Val x) = Just x
+evalM (Div a b) = evalM  h -}
+
+flatMap :: Maybe a -> (a -> Maybe b) -> Maybe b
+flatMap m f = case m of
+  Nothing -> Nothing
+  Just x -> f x
+
 evalM :: Expr -> Maybe Int
 evalM (Val x) = Just x
-evalM (Div a b) = evalM a <<=
-    ((evalM b) <<= safediv)
+evalM (Div a b) = flatMap (evalM a) 
+  (\m -> flatMap (evalM b) (\n -> safediv m n))   
+
 
 main :: IO ()
 main = do
-  print (eval (Div (Val 1) (Val 2)))
+  print (eval (Div (Val 2) (Val 2)))
+  print (evalM (Div (Val 2) (Val 2)))
