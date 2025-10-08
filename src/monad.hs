@@ -1,5 +1,4 @@
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
-import GHC.Internal.TH.Lib (safe)
 
 {-# HLINT ignore "Replace case with maybe" #-}
 {-# HLINT ignore "Replace case with fromMaybe" #-}
@@ -20,11 +19,6 @@ eval (Div a b) = case eval a of
     Nothing -> Nothing
     Just n -> safediv m n
 
-(<<=) :: Maybe a -> (a -> Maybe b) -> Maybe b
-m <<= f = case m of
-  Nothing -> Nothing
-  Just x -> f x
-
 {- evalM :: Expr -> Maybe Int
 evalM (Val x) = Just x
 evalM (Div a b) = evalM  h -}
@@ -36,11 +30,24 @@ flatMap m f = case m of
 
 evalM :: Expr -> Maybe Int
 evalM (Val x) = Just x
-evalM (Div a b) = flatMap (evalM a) 
-  (\m -> flatMap (evalM b) (safediv m) )   
+evalM (Div a b) =
+  flatMap
+    (evalM a)
+    (\m -> flatMap (evalM b) (safediv m))
 
+(<<=) :: Maybe a -> (a -> Maybe b) -> Maybe b
+m <<= f = case m of
+  Nothing -> Nothing
+  Just x -> f x
+
+evalMonad :: Expr -> Maybe Int
+evalMonad (Val x) = Just x
+evalMonad (Div a b) =
+  evalMonad a <<= \m ->
+    evalMonad b <<= safediv m
 
 main :: IO ()
 main = do
   print (eval (Div (Val 4) (Val 2)))
   print (evalM (Div (Val 4) (Val 2)))
+  print (evalMonad (Div (Val 4) (Val 2)))
