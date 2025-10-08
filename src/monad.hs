@@ -35,16 +35,11 @@ evalM (Div a b) =
     (evalM a)
     (\m -> flatMap (evalM b) (safediv m))
 
-(<<=) :: Maybe a -> (a -> Maybe b) -> Maybe b
-m <<= f = case m of
-  Nothing -> Nothing
-  Just x -> f x
-
 evalMonad :: Expr -> Maybe Int
 evalMonad (Val x) = Just x
 evalMonad (Div a b) =
-  evalMonad a <<= \m ->
-    evalMonad b <<= safediv m
+  evalMonad a >>= \m ->
+    evalMonad b >>= safediv m
 
 main :: IO ()
 main = do
