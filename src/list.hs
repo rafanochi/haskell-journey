@@ -30,7 +30,7 @@ onlyBig = filter (> 10)
 
 sumSquares :: [Int] -> Int -- sum of squares of all numbers
 sumSquares [] = 0
-sumSquares (x : xs) = x * x + sum xs
+sumSquares (x : xs) = x^2 + sum xs
 
 countPos :: [Int] -> Int
 countPos xs = length (filter (> 0) xs)
