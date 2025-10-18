@@ -15,6 +15,10 @@ withdraw :: String -> Int -> Map.Map String Int -> Maybe (Map.Map String Int)
 withdraw account amount database =
   Map.lookup account database >>= (\x -> Just (Map.insert account (x - amount) database))
 
+withdrawWithAdjust :: String -> Int -> Map.Map String Int -> Maybe (Map.Map String Int)
+withdrawWithAdjust account amount database =
+  Map.lookup account database >>= (\x -> Just (Map.adjust (x -) account database))
+
 main :: IO ()
 main = do
   print (Map.lookup "z" values)
