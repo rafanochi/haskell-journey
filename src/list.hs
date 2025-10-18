@@ -22,6 +22,9 @@ unzipp :: [(a, b)] -> ([a], [b])
 unzipp [] = ([],[])
 unzipp ((x, y) : xys) = ([x], [y]) +~ unzipp xys
 
+incAll :: [Int] -> [Int] -- increase elements by 1
+incAll = map (+1)
+
 main :: IO ()
 main = do
   print (maxi [5, 2, 4, 9])
