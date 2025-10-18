@@ -29,8 +29,8 @@ onlyBig :: [Int] -> [Int] -- keep only elements >10
 onlyBig = filter (> 10)
 
 sumSquares :: [Int] -> Int -- sum of squares of all numbers
-sumSquares [] = 0
-sumSquares (x : xs) = x^2 + sum xs
+sumSquares = foldr (\x -> (+) (x ^ 2)) 0
+-- sumSquares = foldr (\x -> (x ^ 2) (+)) 0 <- this is error
 
 countPos :: [Int] -> Int
 countPos xs = length (filter (> 0) xs)
