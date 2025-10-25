@@ -7,7 +7,7 @@
     let
       system = "x86_64-linux";
       pkgs = import nixpkgs { inherit system; };
-      hpkgs = pkgs.haskell.packages."ghc912";
+      hpkgs = pkgs.haskell.packages."ghc98";
     in
     {
       devShells.${system}.default = pkgs.mkShell {
