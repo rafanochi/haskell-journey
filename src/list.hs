@@ -1,3 +1,5 @@
+import Debug.Trace (trace)
+
 (~) :: Int -> Int -> Int
 x ~ y
   | x > y = x
@@ -40,6 +42,12 @@ countPos xs = length (filter (> 0) xs)
 combineThem :: [Int] -> Int
 combineThem = sumSquares . onlyBig
 
+seqSearch :: [Int] -> Int -> Int -> Int
+seqSearch e n k
+  | n == 0 = -1
+  | last e == k = n - 1
+  | otherwise = seqSearch (init e) (n - 1) k
+
 main :: IO ()
 main = do
   print (maxi [5, 2, 4, 9])
@@ -51,3 +59,4 @@ main = do
   print (sumSquares [1, 1, 1])
   print (countPos [1, 3, 5, -1, -5, -2])
   print (combineThem [1, 1, 1, 22])
+  print (seqSearch [4, 2, 8] 3 9)
