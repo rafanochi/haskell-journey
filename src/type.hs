@@ -1,8 +1,8 @@
-data LinkedList = Empty | Node Int LinkedList
+data LinkedList a = Empty | Node a (LinkedList a)
 
-ihead :: LinkedList -> Int
+ihead :: LinkedList a -> a
 ihead (Node x _) = x
 
-itail :: LinkedList -> Int
+itail :: LinkedList a -> a
 itail (Node x Empty) = x
 itail (Node _ xs) = itail xs
