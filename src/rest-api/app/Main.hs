@@ -1,1 +1,1 @@
-import Database.PostgreSQL.Simple
+main=undefined
