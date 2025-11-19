@@ -2,18 +2,12 @@
   description = "Servant development environment";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-25.05-darwin";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs =
-    {
-      self,
-      nixpkgs,
-      flake-utils,
-    }:
-    flake-utils.lib.eachDefaultSystem (
-      system:
+  outputs = { self, nixpkgs, flake-utils, }:
+    flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs { inherit system; };
 
@@ -25,11 +19,7 @@
 
         nixFormatter = pkgs.nixfmt-rfc-style;
 
-        mkDevShell =
-          {
-            compiler ? "ghc92",
-            tutorial ? false,
-          }:
+        mkDevShell = { compiler ? "ghc92", tutorial ? false, }:
           let
             ghc = pkgs.haskell.packages.${compiler}.ghcWithPackages (ghcPkg: [
               # Some dependencies don't like being built with
@@ -37,17 +27,11 @@
               ghcPkg.zlib
               ghcPkg.lzma
             ]);
-            docstuffs = pkgs.python3.withPackages (
-              ps: with ps; [
-                recommonmark
-                sphinx
-                sphinx_rtd_theme
-              ]
-            );
+            docstuffs = pkgs.python3.withPackages
+              (ps: with ps; [ recommonmark sphinx sphinx_rtd_theme ]);
           in
           pkgs.mkShell {
-            buildInputs =
-              with pkgs;
+            buildInputs = with pkgs;
               [
                 ghc
                 python3
@@ -60,16 +44,7 @@
                 haskellFormatter
                 haskellLinter
                 nixFormatter
-              ]
-              ++ (
-                if tutorial then
-                  [
-                    docstuffs
-                    postgresql
-                  ]
-                else
-                  [ ]
-              );
+              ] ++ (if tutorial then [ docstuffs postgresql ] else [ ]);
           };
 
         mkCiShell = tools: pkgs.mkShell { buildInputs = tools; };
@@ -91,6 +66,5 @@
           haskellFormatter = mkCiShell [ haskellFormatter ];
           haskellLinter = mkCiShell [ haskellLinter ];
         };
-      }
-    );
+      });
 }
