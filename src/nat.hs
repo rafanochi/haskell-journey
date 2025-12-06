@@ -1,4 +1,5 @@
-data Nat = Zero | Succ Nat
+data Nat = Zero | Succ Nat deriving Show
+-- Succ (Succ (Succ (Succ Zero)))
 
 instance Num Nat where
   (+) :: Nat -> Nat -> Nat
