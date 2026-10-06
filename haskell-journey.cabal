@@ -1,0 +1,62 @@
+cabal-version:      3.0
+name:               haskell-journey
+version:            0.1.0.0
+license:            BSD-3-Clause
+license-file:       LICENSE
+author:             rafanochi
+maintainer:         zawkindev@gmail.com
+category:           Web
+build-type:         Simple
+
+extra-doc-files:    CHANGELOG.md
+
+common warnings
+    ghc-options: -Wall
+
+executable haskell-journey
+    import:           warnings
+    main-is:          Main.hs
+    build-depends:
+      , aeson
+      , base
+      , bytestring
+      , conduit
+      , conduit-combinators
+      , containers
+      , filepath
+      , generic-lens
+      , http-api-data
+      , http-client-tls
+      , http-media
+      , http-types
+      , lens
+      , monad-logger
+      , mtl
+      , named
+      , optparse-generic
+      , path-pieces
+      , safe-exceptions
+      , servant
+      , servant-client
+      , servant-client-core
+      , servant-server
+      , sop-core
+      , stm
+      , text
+      , time
+      , transformers
+      , uuid
+      , vector
+      , wai
+      , wai-extra
+      , warp
+      , base-compat
+      , attoparsec
+      , directory
+      , blaze-markup
+      , blaze-html
+      , lucid
+
+    hs-source-dirs:   app
+
+    default-language: Haskell2010
