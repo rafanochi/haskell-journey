@@ -39,26 +39,52 @@ import Text.Blaze.Html.Renderer.Utf8
 data SortBy = Age | Name
 
 data Child = Child {chname :: String, chage :: Int}
+    deriving (Eq, Show, Generic)
+instance ToJSON Child
 
 data Waifu = Waifu
     { name :: String
     , age :: Int
-    , registration :: UTCTime
     , pregnant :: Bool
     , children :: [Child]
+    , registration :: Day
     }
+    deriving (Eq, Show, Generic)
+instance ToJSON Waifu
 
-type WaifuId = "waifues" :> Capture "waifuid" Integer :> ReqBody '[JSON] Waifu
+waifues :: [Waifu]
+waifues =
+    [ Waifu "Reze" 18 False [] (fromGregorian 2008 3 13)
+    , Waifu "Asuna" 18 True [] (fromGregorian 2008 30 10)
+    ]
 
-type WaifuAPI =
-    "waifues" :> QueryParam "sortby" SortBy :> Get '[JSON] [Waifu]
-        :<|> "waifues" :> QueryFlag "pregnant" :> Get '[JSON] [Waifu]
-        :<|> "waifues" :> QueryParams "children" Child :> Get '[JSON] [Waifu]
-        -- /waifues/:waifuid
-        :<|> WaifuId :> Get '[JSON] Waifu
-        :<|> WaifuId :> Post '[JSON] Waifu
-        :<|> WaifuId :> Put '[JSON] Waifu
-        :<|> WaifuId :> DeleteNoContent
+-- Add a header
+-- type WaifuId =
+--     "waifues"
+--         :> Header "User-Agent" String
+--         :> Capture "waifuid" Integer
+--         :> ReqBody '[JSON] Waifu
+
+type WaifuAPI1 = "waifu" :> Get '[JSON] [Waifu]
+
+-- :> QueryParam "sortby" SortBy
+-- :> Get '[JSON] [Waifu]
+-- :<|> "waifues" :> QueryFlag "pregnant" :> Get '[JSON] [Waifu]
+-- :<|> "waifues" :> QueryParams "children" Child :> Get '[JSON] [Waifu]
+-- -- /waifues/:waifuid
+-- :<|> WaifuId :> Get '[JSON] Waifu
+-- :<|> WaifuId :> Post '[JSON] Waifu
+-- :<|> WaifuId :> Put '[JSON] Waifu
+-- :<|> WaifuId :> DeleteNoContent
+
+server :: Server WaifuAPI1
+server = return waifues
+
+waifuAPI :: Proxy WaifuAPI1
+waifuAPI = Proxy
+
+app :: Application
+app = serve waifuAPI server
 
 main :: IO ()
-main = putStrLn "Hello, Haskell!"
+main = run 8081 app
