@@ -65,7 +65,7 @@ waifues =
 --         :> Capture "waifuid" Integer
 --         :> ReqBody '[JSON] Waifu
 
-type WaifuAPI1 = "waifu" :> Get '[JSON] [Waifu]
+type WaifuAPI1 = "waifus" :> Get '[JSON] [Waifu]
 
 -- :> QueryParam "sortby" SortBy
 -- :> Get '[JSON] [Waifu]
